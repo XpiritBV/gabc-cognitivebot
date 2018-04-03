@@ -1,9 +1,11 @@
 ﻿using System;
+using cognitivebot.Topics;
+
 namespace cognitivebot
 {
-    public class Topic
+    public class DetectiveBotContext
     {
-        public string ActiveTopic { get; set; } = Activities.None;
+        public ITopic ActiveTopic { get; set; }
         public string ActiveUserId { get; set; }
     }
 
@@ -16,7 +18,7 @@ namespace cognitivebot
 
     public static class Activities
     {
-        public const string None = nameof(None);
+        public const string Default = nameof(Default);
 
         public const string TrainSuspects = nameof(TrainSuspects);
 

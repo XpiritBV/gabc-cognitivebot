@@ -33,13 +33,6 @@ namespace cognitivebot
             services.AddSingleton(_ => Configuration);
             var luisSection = Configuration.GetSection("LUIS");
             var botSection = Configuration.GetSection("Bot");
-            //var luisModel = new LuisModel(luisSection.GetValue<string>("ModelId"), luisSection.GetValue<string>("ApiKey"), new Uri(luisSection.GetValue<string>("ApiHostName")));
-            //var options = new LuisRequest
-            //{
-            //    Verbose = true,
-            //    BingSpellCheckSubscriptionKey = luisSection.GetValue<string>("BingSpellCheckKey"),
-            //    SpellCheck = true
-            //}; // If you want to get all intents scorings, add verbose in luisOptions
 
             var botStateStorage = new MemoryStorage();
             var stateSettings = new StateSettings
@@ -53,10 +46,8 @@ namespace cognitivebot
                 AppId = botSection.GetValue<string>("AppId"),
                 Password = botSection.GetValue<string>("AppPwd")
             })
-                //.Use(new LuisRecognizerMiddlewareWrapper(luisModel, luisOptions: options))
-                .Use(new ConversationState<Topic>(botStateStorage, stateSettings))
+                .Use(new ConversationState<DetectiveBotContext>(botStateStorage, stateSettings))
                 .Use(new UserState<UserStateModel>(botStateStorage, stateSettings));
-
 
 
             services.AddSingleton(adapter);

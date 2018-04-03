@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using cognitivebot.Topics;
 using Microsoft.Bot;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Core.Extensions;
@@ -16,9 +17,6 @@ namespace cognitivebot
     {
         private ILogger _logger;
 
-        /// <summary>
-        /// Creates a new default instance.
-        /// </summary>
         public DetectiveBot(ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory?.CreateLogger(GetType().Name);
@@ -27,47 +25,61 @@ namespace cognitivebot
         /// <inheritdoc />
         public async Task OnReceiveActivity(IBotContext context)
         {
-            var state = context.GetConversationState<Topic>();
             switch (context.Request.Type)
             {
                 case ActivityTypes.ConversationUpdate:
                     await GetOrAddUserProfile(context);
                     break;
                 case ActivityTypes.Message:
-                    var luisResult = context.Get<RecognizerResult>(LuisRecognizerMiddleware.LuisRecognizerResultKey);
-                    //dialog
-                    if (luisResult != null)
-                    {
-                        //await ExecuteLuisIntent(context, luisResult);
-                    }
-                    //response
-                    else if (context.Request.Value is JToken token)
-                    {
-                        var submittedData = token.ToObject<SubmittedData>();
-                        var topic = state.ActiveTopic ?? Activities.None;
-                        string action = submittedData.Action;
-
-
-                        switch (action)
-                        {
-                            case Activities.TrainSuspects:
-                                break;
-                            case Activities.CheckSuspects:
-                                break;
-                            case Activities.GetFaceAttributes:
-                                break;
-                        }
-                    }
-
+                    await HandleMessage(context);
                     break;
             }
+        }
+
+        public async Task HandleMessage(IBotContext context)
+        {
+            var state = context.GetConversationState<DetectiveBotContext>();
+
+            var handled = false;
+
+            if(state.ActiveTopic == null)
+            {
+                state.ActiveTopic = new DefaultTopic();
+                handled = await state.ActiveTopic.StartTopic(state);
+            }
+            else
+            {
+                handled = await state.ActiveTopic.ContinueTopic(state);
+            }
+
+            // if activeTopic's result is false and the activeTopic is NOT already the default topic
+            if (handled == false && !(state.ActiveTopic is DefaultTopic))
+            {
+                // USe DefaultTopic as the active topic
+                state.ActiveTopic = new DefaultTopic();
+                handled = await state.ActiveTopic.ResumeTopic(state);
+            }
+
+
+            //switch (state.ActiveTopic.Name)
+            //{
+            //    case Activities.TrainSuspects:
+            //        break;
+            //    case Activities.GetFaceAttributes:
+            //        break;
+            //    case Activities.CheckSuspects:
+            //        break;
+            //    default:
+                    
+            //        break;
+            //}
         }
 
         private async Task GetOrAddUserProfile(IBotContext context)
         {
             try
             {
-                var conversationState = context.GetConversationState<Topic>();
+                var conversationState = context.GetConversationState<DetectiveBotContext>();
                 var userState = context.GetUserState<UserStateModel>();
 
                 //new conversation
@@ -91,14 +103,5 @@ namespace cognitivebot
         {
             return ((JValue)luisResult.Entities.GetValue(propertyName)?.Single())?.Value?.ToString();
         }
-    }
-
-
-    public class SubmittedData
-    {
-        public string Action { get; set; }
-        public string Type { get; set; }
-        [JsonProperty("undefined")]
-        public string Payload { get; set; }
     }
 }
