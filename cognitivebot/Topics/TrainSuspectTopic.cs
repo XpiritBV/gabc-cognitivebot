@@ -9,7 +9,7 @@ namespace cognitivebot.Topics
         {
         }
 
-        public string Name { get => Activities.TrainSuspects; }
+        public string Name { get => ""; }
 
         public Task<bool> ContinueTopic(DetectiveBotContext context)
         {

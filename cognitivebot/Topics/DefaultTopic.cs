@@ -9,21 +9,27 @@ namespace cognitivebot.Topics
         {
         }
 
-        public string Name { get => Activities.Default; }
+        public string Name { get => "Default"; }
 
-        public Task<bool> ContinueTopic(DetectiveBotContext context)
+        public async Task<bool> ContinueTopic(DetectiveBotContext context)
         {
-            throw new NotImplementedException();
+            var reply = context.Request.CreateReply("Continue default");
+            await context.SendActivity(reply);
+            return true;     
         }
 
-        public Task<bool> ResumeTopic(DetectiveBotContext context)
+        public async Task<bool> ResumeTopic(DetectiveBotContext context)
         {
-            throw new NotImplementedException();
+            var reply = context.Request.CreateReply("Welcome back? How may i help you?");
+            await context.SendActivity(reply);
+            return true;
         }
 
-        public Task<bool> StartTopic(DetectiveBotContext context)
+        public async Task<bool> StartTopic(DetectiveBotContext context)
         {
-            throw new NotImplementedException();
+            var reply = context.Request.CreateReply("I'm a super smart detective, which of my services do you request?");
+            await context.SendActivity(reply);
+            return true;
         }
     }
 }

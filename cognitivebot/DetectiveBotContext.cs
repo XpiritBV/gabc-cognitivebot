@@ -1,29 +1,48 @@
 ﻿using System;
 using cognitivebot.Topics;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Core.Extensions;
 
 namespace cognitivebot
 {
-    public class DetectiveBotContext
+    public class DetectiveBotContext : BotContextWrapper
+    {
+        public DetectiveBotContext(IBotContext context) : base(context)
+        {
+        }
+
+        /// <summary>
+        /// Persisted AlarmBot Conversation State 
+        /// </summary>
+        public ConversationData ConversationState
+        {
+            get
+            {
+                return ConversationState<ConversationData>.Get(this);
+            }
+        }
+
+        /// <summary>
+        /// Persisted AlarmBot User State
+        /// </summary>
+        public UserData UserState
+        {
+            get
+            {
+                return UserState<UserData>.Get(this);
+            }
+        }
+    }
+
+    public class ConversationData : StoreItem
     {
         public ITopic ActiveTopic { get; set; }
-        public string ActiveUserId { get; set; }
     }
 
-    public class UserStateModel
+    /// <summary>
+    /// Object persisted as user state
+    /// </summary>
+    public class UserData : StoreItem
     {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
-    }
-
-    public static class Activities
-    {
-        public const string Default = nameof(Default);
-
-        public const string TrainSuspects = nameof(TrainSuspects);
-
-        public const string CheckSuspects = nameof(CheckSuspects);
-
-        public const string GetFaceAttributes = nameof(GetFaceAttributes);
     }
 }

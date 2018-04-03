@@ -36,72 +36,49 @@ namespace cognitivebot
             }
         }
 
-        public async Task HandleMessage(IBotContext context)
+        public async Task HandleMessage(IBotContext botContext)
         {
-            var state = context.GetConversationState<DetectiveBotContext>();
+            var context = new DetectiveBotContext(botContext);
 
             var handled = false;
 
-            if(state.ActiveTopic == null)
+            if(context.ConversationState.ActiveTopic == null)
             {
-                state.ActiveTopic = new DefaultTopic();
-                handled = await state.ActiveTopic.StartTopic(state);
+                context.ConversationState.ActiveTopic = new DefaultTopic();
+                handled = await context.ConversationState.ActiveTopic.StartTopic(context);
             }
             else
             {
-                handled = await state.ActiveTopic.ContinueTopic(state);
+                handled = await context.ConversationState.ActiveTopic.ContinueTopic(context);
             }
 
             // if activeTopic's result is false and the activeTopic is NOT already the default topic
-            if (handled == false && !(state.ActiveTopic is DefaultTopic))
+            if (handled == false && !(context.ConversationState.ActiveTopic is DefaultTopic))
             {
                 // USe DefaultTopic as the active topic
-                state.ActiveTopic = new DefaultTopic();
-                handled = await state.ActiveTopic.ResumeTopic(state);
+                context.ConversationState.ActiveTopic = new DefaultTopic();
+                handled = await context.ConversationState.ActiveTopic.ResumeTopic(context);
             }
-
-
-            //switch (state.ActiveTopic.Name)
-            //{
-            //    case Activities.TrainSuspects:
-            //        break;
-            //    case Activities.GetFaceAttributes:
-            //        break;
-            //    case Activities.CheckSuspects:
-            //        break;
-            //    default:
-                    
-            //        break;
-            //}
         }
 
-        private async Task GetOrAddUserProfile(IBotContext context)
+        private async Task GetOrAddUserProfile(IBotContext botContext)
         {
             try
             {
-                var conversationState = context.GetConversationState<DetectiveBotContext>();
-                var userState = context.GetUserState<UserStateModel>();
+                var context = new DetectiveBotContext(botContext);
 
-                //new conversation
-                if (conversationState.ActiveUserId == null)
+                var activity = context.Request.AsConversationUpdateActivity();
+                var user = activity.MembersAdded.Where(m => m.Id == activity.Recipient.Id).FirstOrDefault();
+                if (user != null)
                 {
-                    var newMember = context.Request.MembersAdded.SingleOrDefault(m => m.Name != "Bot");
-                    if (newMember != null)
-                    {
-                        await context.SendActivity($"Hello {newMember.Name}, welcome to the Detective bot!");
-                        conversationState.ActiveUserId = newMember.Id;
-                    }
+                    await context.SendActivity($"Hello {user.Name}, welcome to the Detective bot!");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to get user profile.");
+                _logger.LogError(ex, "Failed to get user.");
             }
         }
 
-        private static string GetEntityValue(RecognizerResult luisResult, string propertyName)
-        {
-            return ((JValue)luisResult.Entities.GetValue(propertyName)?.Single())?.Value?.ToString();
-        }
     }
 }
