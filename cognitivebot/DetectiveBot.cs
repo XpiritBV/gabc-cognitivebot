@@ -42,6 +42,14 @@ namespace cognitivebot
 
             var handled = false;
 
+            if (context.RecognizedIntents.TopIntent?.Name == Intents.Quit)
+            {
+                await context.SendActivity($"Stopping current action");
+                context.ConversationState.ActiveTopic = new DefaultTopic();
+                handled = await context.ConversationState.ActiveTopic.StartTopic(context);
+                return;
+            }
+
             if(context.ConversationState.ActiveTopic == null)
             {
                 context.ConversationState.ActiveTopic = new DefaultTopic();

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AdaptiveCards;
-using Microsoft.Bot.Builder.Core.Extensions;
-using Microsoft.Bot.Schema;
 
 namespace cognitivebot.Topics
 {
-    public class DefaultTopic : ITopic
+    public class TrainTopic : ITopic
     {
         public enum TopicState
         {
@@ -16,12 +13,13 @@ namespace cognitivebot.Topics
         }
 
         public TopicState State
-        { 
-            get; 
-            set; 
+        {
+            get;
+            set;
         } = TopicState.unknown;
 
-        public string Name { get => "Default"; }
+
+        public string Name { get => "TrainTopic"; }
 
         public async Task<bool> ContinueTopic(DetectiveBotContext context)
         {
@@ -35,19 +33,19 @@ namespace cognitivebot.Topics
             } 
         }
 
-
-
         private async Task<bool> HandleSelectedTopic(DetectiveBotContext context)
         {
             State = TopicState.unknown;
-            switch(context.RecognizedIntents.TopIntent?.Name)
+            switch (context.RecognizedIntents.TopIntent?.Name)
             {
-                case Intents.Train:
-                    context.ConversationState.ActiveTopic = new TrainTopic();
-                    return await context.ConversationState.ActiveTopic.StartTopic(context);
-                case Intents.Identify:
-                    context.ConversationState.ActiveTopic = new IdentifyTopic();
-                    return await context.ConversationState.ActiveTopic.StartTopic(context);
+                case Intents.Suspects:
+                    var reply = context.Request.CreateReply("Let's train some suspects");
+                    await context.SendActivity(reply);
+                    return true;
+                case Intents.MurderWeapons:
+                    var reply2 = context.Request.CreateReply("Let's train some suspects");
+                    await context.SendActivity(reply2);
+                    return true;
                 default:
                     var reply3 = context.Request.CreateReply("Sorry i can't help you with that");
                     await context.SendActivity(reply3);
@@ -55,22 +53,19 @@ namespace cognitivebot.Topics
             }
         }
 
+
         public async Task<bool> ResumeTopic(DetectiveBotContext context)
         {
-            var reply = context.Request.CreateReply("Welcome back? How may i help you?");
-            await context.SendActivity(reply);
-            return true;
+            throw new NotImplementedException();
         }
 
         public async Task<bool> StartTopic(DetectiveBotContext context)
         {
-            var reply = BotReplies.ReplyWithOptions("How may i help you?", new List<string>() {Intents.Train, Intents.Identify}, context);
+            var reply = BotReplies.ReplyWithOptions("What would you like to train?", new List<string>() { Intents.Suspects, Intents.MurderWeapons }, context);
             await context.SendActivity(reply);
             State = TopicState.askedTopic;
 
             return true;
         }
-
-
     }
 }

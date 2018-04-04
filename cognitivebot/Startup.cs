@@ -41,13 +41,11 @@ namespace cognitivebot
                 middleware.Add(new UserState<UserData>(new MemoryStorage()));
                 middleware.Add(new ConversationState<ConversationData>(new MemoryStorage()));
                 middleware.Add(new RegExpRecognizerMiddleware()
-                                .AddIntent("showAlarms", new Regex("show alarms(.*)", RegexOptions.IgnoreCase))
-                                .AddIntent("addAlarm", new Regex("add alarm(.*)", RegexOptions.IgnoreCase))
-                                .AddIntent("deleteAlarm", new Regex("delete alarm(.*)", RegexOptions.IgnoreCase))
-                                .AddIntent("help", new Regex("help(.*)", RegexOptions.IgnoreCase))
-                                .AddIntent("cancel", new Regex("cancel(.*)", RegexOptions.IgnoreCase))
-                                .AddIntent("confirmYes", new Regex("(yes|yep|yessir|^y$)", RegexOptions.IgnoreCase))
-                                .AddIntent("confirmNo", new Regex("(no|nope|^n$)", RegexOptions.IgnoreCase)));
+                               .AddIntent(Intents.Identify, new Regex("identify(.*)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.Train, new Regex("train(.*)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.MurderWeapons, new Regex("murder weapon(.*)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.Suspects, new Regex("suspect(.*)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.Quit, new Regex("quit(.*)", RegexOptions.IgnoreCase)));
 
             });
 

@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 
 namespace cognitivebot.Topics
 {
-    public class TrainSuspectTopic : ITopic
+    public class IdentifyTopic : ITopic
     {
-        public TrainSuspectTopic()
+        public IdentifyTopic()
         {
         }
 
-        public string Name { get => ""; }
+        public string Name { get => "IdentifyTopic"; }
 
         public Task<bool> ContinueTopic(DetectiveBotContext context)
         {
