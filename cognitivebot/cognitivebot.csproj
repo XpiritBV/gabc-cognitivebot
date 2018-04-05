@@ -21,6 +21,9 @@
     <PackageReference Include="Microsoft.Bot.Builder.Core" Version="4.0.0-alpha2018031301" />
     <PackageReference Include="Microsoft.Bot.Builder.Core.Extensions" Version="4.0.0-alpha2018031301" />
     <PackageReference Include="Microsoft.AdaptiveCards" Version="0.5.1" />
+    <PackageReference Include="Microsoft.ProjectOxford.Vision.DotNetCore" Version="1.1.0" />
+    <PackageReference Include="Microsoft.ProjectOxford.Face.DotNetCore" Version="1.1.0" />
+    <PackageReference Include="Microsoft.ProjectOxford.Emotion.DotNetCore" Version="1.1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

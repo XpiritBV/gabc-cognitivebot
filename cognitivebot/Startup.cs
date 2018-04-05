@@ -41,7 +41,9 @@ namespace cognitivebot
                 middleware.Add(new UserState<UserData>(new MemoryStorage()));
                 middleware.Add(new ConversationState<ConversationData>(new MemoryStorage()));
                 middleware.Add(new RegExpRecognizerMiddleware()
-                               .AddIntent(Intents.Identify, new Regex("identify(.*)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.IdentifySuspect, new Regex("identify suspect(.*)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.IdentifyMurderWeapon, new Regex("identify murder weapon(.*)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.MatchSuspect, new Regex("match suspect(.*)", RegexOptions.IgnoreCase))
                                .AddIntent(Intents.Train, new Regex("train(.*)", RegexOptions.IgnoreCase))
                                .AddIntent(Intents.MurderWeapons, new Regex("murder weapon(.*)", RegexOptions.IgnoreCase))
                                .AddIntent(Intents.Suspects, new Regex("suspect(.*)", RegexOptions.IgnoreCase))
