@@ -13,9 +13,6 @@ namespace cognitivebot
 
         public IRecognizedIntents RecognizedIntents { get { return this.Get<IRecognizedIntents>(); } }
 
-        /// <summary>
-        /// Persisted AlarmBot Conversation State 
-        /// </summary>
         public ConversationData ConversationState
         {
             get
@@ -24,9 +21,6 @@ namespace cognitivebot
             }
         }
 
-        /// <summary>
-        /// Persisted AlarmBot User State
-        /// </summary>
         public UserData UserState
         {
             get

@@ -13,5 +13,8 @@ namespace cognitivebot
         public const string Identify = "Identify";
 
         public const string Quit = "Quit";
+
+        public const string Yes = "Yes";
+        public const string No = "No";
     }
 }

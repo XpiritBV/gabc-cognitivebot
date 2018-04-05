@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace cognitivebot.Topics
 {
-    public class TrainTopic : ITopic
+    public class TrainMurderWeaponsTopic : ITopic
     {
         public enum TopicState
         {
@@ -39,14 +39,16 @@ namespace cognitivebot.Topics
             switch (context.RecognizedIntents.TopIntent?.Name)
             {
                 case Intents.Suspects:
-                    context.ConversationState.ActiveTopic = new TrainSuspectsTopic();
-                    return await context.ConversationState.ActiveTopic.StartTopic(context);
-                case Intents.MurderWeapons:
-                    context.ConversationState.ActiveTopic = new TrainMurderWeaponsTopic();
-                    return await context.ConversationState.ActiveTopic.StartTopic(context);
-                default:
-                    var reply = context.Request.CreateReply("Sorry i can't help you with that");
+                    var reply = context.Request.CreateReply("Let's train some suspects");
                     await context.SendActivity(reply);
+                    return true;
+                case Intents.MurderWeapons:
+                    var reply2 = context.Request.CreateReply("Let's train some suspects");
+                    await context.SendActivity(reply2);
+                    return true;
+                default:
+                    var reply3 = context.Request.CreateReply("Sorry i can't help you with that");
+                    await context.SendActivity(reply3);
                     return false;
             }
         }

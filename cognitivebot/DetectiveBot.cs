@@ -65,7 +65,7 @@ namespace cognitivebot
             {
                 // USe DefaultTopic as the active topic
                 context.ConversationState.ActiveTopic = new DefaultTopic();
-                handled = await context.ConversationState.ActiveTopic.ResumeTopic(context);
+                handled = await context.ConversationState.ActiveTopic.StartTopic(context);
             }
         }
 

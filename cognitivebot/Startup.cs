@@ -45,7 +45,9 @@ namespace cognitivebot
                                .AddIntent(Intents.Train, new Regex("train(.*)", RegexOptions.IgnoreCase))
                                .AddIntent(Intents.MurderWeapons, new Regex("murder weapon(.*)", RegexOptions.IgnoreCase))
                                .AddIntent(Intents.Suspects, new Regex("suspect(.*)", RegexOptions.IgnoreCase))
-                               .AddIntent(Intents.Quit, new Regex("quit(.*)", RegexOptions.IgnoreCase)));
+                               .AddIntent(Intents.Quit, new Regex("quit(.*)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.Yes, new Regex("(yes|yep|yessir|^y$)", RegexOptions.IgnoreCase))
+                               .AddIntent(Intents.No, new Regex("(no|nope|^n$)", RegexOptions.IgnoreCase)));
 
             });
 
