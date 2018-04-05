@@ -48,6 +48,11 @@ namespace cognitivebot.Topics
                 case Intents.IdentifySuspect:
                     context.ConversationState.ActiveTopic = new IdentifyTopic();
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
+                case Intents.IdentifyMurderWeapon:
+                    return true;
+                case Intents.MatchSuspect:
+                    context.ConversationState.ActiveTopic = new MatchSuspectTopic();
+                    return await context.ConversationState.ActiveTopic.StartTopic(context);
                 default:
                     var reply3 = context.Request.CreateReply("Sorry i can't help you with that");
                     await context.SendActivity(reply3);
