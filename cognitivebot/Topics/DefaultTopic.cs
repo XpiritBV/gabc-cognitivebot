@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AdaptiveCards;
+using cognitivebot.Services;
 using Microsoft.Bot.Builder.Core.Extensions;
 using Microsoft.Bot.Schema;
 
@@ -51,7 +52,7 @@ namespace cognitivebot.Topics
                 case Intents.IdentifyMurderWeapon:
                     return true;
                 case Intents.MatchSuspect:
-                    context.ConversationState.ActiveTopic = new MatchSuspectTopic();
+                    context.ConversationState.ActiveTopic = new MatchSuspectTopic(new FaceRecognitionService());
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 default:
                     var reply3 = context.Request.CreateReply("Sorry i can't help you with that");

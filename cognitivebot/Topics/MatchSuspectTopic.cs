@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using cognitivebot.Services;
+using Microsoft.ProjectOxford.Face;
+using System.Linq;
+using Microsoft.ProjectOxford.Face.Contract;
 
 namespace cognitivebot.Topics
 {
     public class MatchSuspectTopic : ITopic
     {
+        IFaceRecognitionService faceRecognitionService;
+
+        public MatchSuspectTopic(IFaceRecognitionService faceRecognitionService)
+        {
+            this.faceRecognitionService = faceRecognitionService;
+        }
+
         public enum TopicState
         {
             started,
@@ -55,7 +66,7 @@ namespace cognitivebot.Topics
 
         private async Task<bool> AskAgeAsync(DetectiveBotContext context)
         {
-            var reply = BotReplies.ReplyWithOptions("What is the age of the suspect?", new List<string>() { "<20", "20-30", "31-40", "41-50", "50+" }, context);
+            var reply = BotReplies.ReplyWithOptions("What is the age of the suspect?", new List<string>() { "<20", "20-30", "31-40", "41-50", ">50" }, context);
             await context.SendActivity(reply);
             State = TopicState.askedAge;
 
@@ -77,7 +88,7 @@ namespace cognitivebot.Topics
         {
             Sex = context.Request.Text;
 
-            var reply = BotReplies.ReplyWithOptions("What is the hair color of the suspect", new List<string>() { "Blond", "Brown", "Black", "Ginger", "Bald" }, context);
+            var reply = BotReplies.ReplyWithOptions("What is the hair color of the suspect", new List<string>() { "Blond", "Brown", "Black", "Red", "Gray", "Bald" }, context);
             await context.SendActivity(reply);
             State = TopicState.askedHairColor;
 
@@ -115,7 +126,87 @@ namespace cognitivebot.Topics
 
         private async Task<bool> CheckSuspectPicture(DetectiveBotContext context)
         {
+            if(context.Request.Attachments?.Count > 0)
+            {
+                try
+                {
+                    var match = 0;
+                    faceRecognitionService = new FaceRecognitionService();
+                    var face = await faceRecognitionService.GetFaceAttributes(context.Request.Attachments[0].ContentUrl);
+                    if(face != null)
+                    {
+                        //check sex
+                        if(face.FaceAttributes.Gender.ToLower() == Sex.ToLower())
+                        {
+                            match += 25;
+                        }
 
+                        //check age
+                        switch ((int)Math.Round(face.FaceAttributes.Age))
+                        {
+                            case int n when (n <= 20):
+                                if (Age == "<20") { match += 25; }
+                                break;
+                            case int n when (n > 20 && n <= 30):
+                                if (Age == "20-30") { match += 25; }
+                                break;
+                            case int n when (n > 30 && n <= 40):
+                                if (Age == "31-40") { match += 25; }
+                                break;
+                            case int n when (n > 40 && n <= 50):
+                                if (Age == "41-50") { match += 25; }
+                                break;
+                            case int n when (n > 50):
+                                if(Age == ">50") { match += 25; }
+                                break;
+                        }
+
+                        //check hair color
+                        if (HairColor.ToLower() == "bald" && (face.FaceAttributes.Hair.Bald > 0.7))
+                        { 
+                            match += 25; 
+                        }
+                        else
+                        {
+                            if(face.FaceAttributes.Hair.HairColor != null &&
+                               face.FaceAttributes.Hair.HairColor.Any(color => color.Color == (HairColorType)Enum.Parse(typeof(HairColorType),HairColor) 
+                                                                      && color.Confidence > 0.7))
+                            {
+                                match += 25;
+                            }
+                        }
+
+                        //check facial hair
+                        if(FacialHair && (face.FaceAttributes.FacialHair.Beard > 0.7 || 
+                                          face.FaceAttributes.FacialHair.Moustache > 0.7 ||
+                                          face.FaceAttributes.FacialHair.Sideburns > 0.7))
+                        {
+                            match += 25;
+                        }
+                        else
+                        {
+                            if (!FacialHair && (face.FaceAttributes.FacialHair.Beard < 0.5 &&
+                                               face.FaceAttributes.FacialHair.Moustache < 0.5 &&
+                                               face.FaceAttributes.FacialHair.Sideburns < 0.5))
+                            {
+                                match += 25;
+                            }
+                            
+                        }
+                        
+                    }
+
+                    await context.SendActivity(context.Request.CreateReply($"This person matches the description for {match.ToString()}%"));
+
+
+                }
+                catch(Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Exception: {ex.Message}");
+                    await context.SendActivity(context.Request.CreateReply($"Error processing this image. Are you sure it contained a face?"));
+                }
+
+            }
             await context.SendActivity(context.Request.CreateReply($"Take a picture of a suspect and i'll check how far it matches the description"));
 
             State = TopicState.checkSuspectPicture;
