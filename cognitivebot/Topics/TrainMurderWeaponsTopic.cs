@@ -9,7 +9,10 @@ namespace cognitivebot.Topics
         public enum TopicState
         {
             unknown,
-            askedTopic
+            started,
+            askedForPicture,
+            askedForWeaponName,
+            finished
         }
 
         public TopicState State
@@ -18,40 +21,71 @@ namespace cognitivebot.Topics
             set;
         } = TopicState.unknown;
 
-
         public string Name { get => "TrainTopic"; }
 
         public async Task<bool> ContinueTopic(DetectiveBotContext context)
         {
-            switch(State)
+            switch (State)
             {
-                case TopicState.askedTopic:
-                    return await HandleSelectedTopic(context);
+                case TopicState.started:
+                    return await AskForPicture(context);
+                case TopicState.askedForPicture:
+                    return await AskForWeaponName(context);
+                case TopicState.askedForWeaponName:
+                    return await SaveName(context);
+                case TopicState.finished:
+                    return await CheckForAnother(context);
                 case TopicState.unknown:
                 default:
                     return await StartTopic(context);
-            } 
-        }
-
-        private async Task<bool> HandleSelectedTopic(DetectiveBotContext context)
-        {
-            State = TopicState.unknown;
-            switch (context.RecognizedIntents.TopIntent?.Name)
-            {
-                case Intents.Suspects:
-                    var reply = context.Request.CreateReply("Let's train some suspects");
-                    await context.SendActivity(reply);
-                    return true;
-                case Intents.MurderWeapons:
-                    var reply2 = context.Request.CreateReply("Let's train some suspects");
-                    await context.SendActivity(reply2);
-                    return true;
-                default:
-                    var reply3 = context.Request.CreateReply("Sorry i can't help you with that");
-                    await context.SendActivity(reply3);
-                    return false;
             }
         }
+
+        private async Task<bool> AskForPicture(DetectiveBotContext context)
+        {
+            var reply = context.Request.CreateReply("Please send me a picture of the murder weapon");
+            await context.SendActivity(reply);
+            State = TopicState.askedForPicture;
+
+            return true;
+        }
+
+        private async Task<bool> AskForWeaponName(DetectiveBotContext context)
+        {
+            var reply = context.Request.CreateReply("What is the name of this Weapon?");
+            await context.SendActivity(reply);
+            State = TopicState.askedForWeaponName;
+
+            return true;
+        }
+
+        private async Task<bool> SaveName(DetectiveBotContext context)
+        {
+            var reply = context.Request.CreateReply($"Storing new suspect {context.Request.Text}");
+            await context.SendActivity(reply);
+
+
+            var reply2 = BotReplies.ReplyWithOptions("Would you like to add another?", new List<string>() { Intents.Yes, Intents.No }, context);
+            await context.SendActivity(reply2);
+            State = TopicState.finished;
+
+            return true;
+        }
+
+        private async Task<bool> CheckForAnother(DetectiveBotContext context)
+        {
+            if (context.RecognizedIntents.TopIntent?.Name == Intents.Yes)
+            {
+                State = TopicState.started;
+                return await this.ContinueTopic(context);
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
 
 
         public async Task<bool> ResumeTopic(DetectiveBotContext context)
@@ -61,11 +95,12 @@ namespace cognitivebot.Topics
 
         public async Task<bool> StartTopic(DetectiveBotContext context)
         {
-            var reply = BotReplies.ReplyWithOptions("What would you like to train?", new List<string>() { Intents.Suspects, Intents.MurderWeapons }, context);
+            var reply = context.Request.CreateReply("Let's learn something about the murder weapons you find.");
             await context.SendActivity(reply);
-            State = TopicState.askedTopic;
+            State = TopicState.started;
 
-            return true;
+            return await this.ContinueTopic(context);
         }
+
     }
 }
