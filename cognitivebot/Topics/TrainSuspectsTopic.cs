@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using cognitivebot.Services;
+using Microsoft.ProjectOxford.Face.Contract;
 
 namespace cognitivebot.Topics
 {
@@ -18,8 +19,8 @@ namespace cognitivebot.Topics
         }
 
         public TopicState State{ get; set; } = TopicState.unknown;
-        public string SuspectName { get; set; }
-        public Guid SuspectId { get; set; }
+        public Person Suspect { get; set; }
+        public string LatestImage { get; set; }
 
 
         public string Name { get => "TrainTopic"; }
@@ -62,10 +63,10 @@ namespace cognitivebot.Topics
                 FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
                 var person = await faceRecognitionService.IdentifyPerson(photo);
 
-                if(!string.IsNullOrEmpty(person))
+                if(person != null && !string.IsNullOrEmpty(person.Name))
                 {
-                    SuspectName = person;
-                    var reply2 = BotReplies.ReplyWithOptions($"Is this {person}?", new List<string>() { Intents.Yes, Intents.No }, context);
+                    Suspect = person;
+                    var reply2 = BotReplies.ReplyWithOptions($"Is this {person.Name}?", new List<string>() { Intents.Yes, Intents.No }, context);
                     await context.SendActivity(reply2);
                     State = TopicState.checkEsistingPerson;
                     return true;  
@@ -79,17 +80,22 @@ namespace cognitivebot.Topics
 
                 }
             }
+            return true;
 
         }
 
-        private Task<bool> CheckExistingPerson(DetectiveBotContext context)
+        private async Task<bool> CheckExistingPerson(DetectiveBotContext context)
         {
             if (context.RecognizedIntents.TopIntent?.Name == Intents.Yes)
             {
-                FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
-                faceRecognitionService.AddPhotoToExistingPerson()
+                //add picture to existing
                 
             }
+            else
+            {
+                //create new person and upload image
+            }
+            return true;
             
         }
 

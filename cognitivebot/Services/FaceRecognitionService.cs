@@ -71,7 +71,7 @@ namespace cognitivebot.Services
             }
         }
 
-        public async Task<string> IdentifyPerson(string url)
+        public async Task<Person> IdentifyPerson(string url)
         {
             var result = await faceClient.DetectAsync(url, true);
             if(result != null && result.Length > 0)
@@ -79,7 +79,7 @@ namespace cognitivebot.Services
                 var person = await faceClient.GetPersonAsync(PersonGroup, result[0].FaceId);
                 if(person != null)
                 {
-                    return person.Name;
+                    return person;
                 }
             }
             return null;
