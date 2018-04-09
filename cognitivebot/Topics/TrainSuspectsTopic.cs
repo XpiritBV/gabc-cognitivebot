@@ -73,6 +73,7 @@ namespace cognitivebot.Topics
                 }
                 else
                 {
+                    LatestImage = photo;
                     var reply = context.Request.CreateReply("What is the name of this suspect?");
                     await context.SendActivity(reply);
                     State = TopicState.askedForName;
@@ -86,24 +87,31 @@ namespace cognitivebot.Topics
 
         private async Task<bool> CheckExistingPerson(DetectiveBotContext context)
         {
+            FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
             if (context.RecognizedIntents.TopIntent?.Name == Intents.Yes)
             {
-                //add picture to existing
-                
+                var result = await faceRecognitionService.AddPhotoToExistingPerson(Suspect.PersonId, LatestImage);
+                var reply = context.Request.CreateReply($"Added picture to {Suspect.Name}");
+                await context.SendActivity(reply);          
             }
             else
             {
-                //create new person and upload image
+                var result = await faceRecognitionService.AddNewPerson(Suspect.Name, LatestImage);
+                var reply = context.Request.CreateReply($"Added picture to {Suspect.Name}");
+                await context.SendActivity(reply);
             }
+            State = TopicState.finished;
             return true;
             
         }
 
         private async Task<bool> SaveName(DetectiveBotContext context)
         {
-            var reply = context.Request.CreateReply($"Storing new suspect {context.Request.Text}");
+            var name = context.Request.Text;
+            FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
+            var result = await faceRecognitionService.AddNewPerson(name, LatestImage);
+            var reply = context.Request.CreateReply($"Added person {name}");
             await context.SendActivity(reply);
-
 
             var reply2 = BotReplies.ReplyWithOptions("Would you like to add another?", new List<string>() { Intents.Yes, Intents.No }, context);
             await context.SendActivity(reply2);
@@ -121,6 +129,11 @@ namespace cognitivebot.Topics
             }
             else
             {
+                var reply = context.Request.CreateReply("I'll be training the newly added pictures in the background.");
+                await context.SendActivity(reply);
+
+                FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
+                await faceRecognitionService.TrainModel();
                 return false;
             }
             

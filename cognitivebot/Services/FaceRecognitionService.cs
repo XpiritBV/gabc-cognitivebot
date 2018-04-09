@@ -76,13 +76,26 @@ namespace cognitivebot.Services
             var result = await faceClient.DetectAsync(url, true);
             if(result != null && result.Length > 0)
             {
-                var person = await faceClient.GetPersonAsync(PersonGroup, result[0].FaceId);
-                if(person != null)
+                try
                 {
-                    return person;
+                    var person = await faceClient.GetPersonAsync(PersonGroup, result[0].FaceId);
+                    if (person != null)
+                    {
+                        return person;
+                    }
+                }
+                catch(FaceAPIException faceException)
+                {
+                    //if face is not found the api throws an exception :(
+                    return null;
                 }
             }
             return null;
+        }
+
+        public async Task TrainModel()
+        {
+            await faceClient.TrainPersonGroupAsync(PersonGroup);
         }
     }
 }
