@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace cognitivebot.Topics
 {
-    public class IdentifyTopic : ITopic
+    public class IdentifyMurderWeaponTopic : ITopic
     {
-        public IdentifyTopic()
+        public IdentifyMurderWeaponTopic()
         {
         }
 

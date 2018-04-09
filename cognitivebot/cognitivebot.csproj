@@ -33,5 +33,6 @@
   <ItemGroup>
     <Compile Remove="Controllers\BotController.cs" />
     <Compile Remove="Controllers\ValuesController.cs" />
+    <Compile Remove="Services\IFaceRecognitionService1.cs" />
   </ItemGroup>
 </Project>

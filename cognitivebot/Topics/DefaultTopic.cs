@@ -47,10 +47,11 @@ namespace cognitivebot.Topics
                     context.ConversationState.ActiveTopic = new TrainTopic();
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.IdentifySuspect:
-                    context.ConversationState.ActiveTopic = new IdentifyTopic();
+                    context.ConversationState.ActiveTopic = new IdentifySuspectTopic();
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.IdentifyMurderWeapon:
-                    return true;
+                    context.ConversationState.ActiveTopic = new IdentifyMurderWeaponTopic();
+                    return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.MatchSuspect:
                     context.ConversationState.ActiveTopic = new MatchSuspectTopic(new FaceRecognitionService());
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
