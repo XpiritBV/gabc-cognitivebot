@@ -8,7 +8,6 @@ namespace cognitivebot
         public const string Train = "Train Images";
 
         public const string Suspects = "Suspects";
-        public const string MurderWeapons = "Murder weapons";
 
         public const string IdentifySuspect = "Identify suspect";
 
