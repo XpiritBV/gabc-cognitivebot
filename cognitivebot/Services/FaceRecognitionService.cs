@@ -78,10 +78,17 @@ namespace cognitivebot.Services
             {
                 try
                 {
-                    var person = await faceClient.GetPersonAsync(PersonGroup, result[0].FaceId);
-                    if (person != null)
+                    var identifyResults = await faceClient.IdentifyAsync(PersonGroup, new Guid[] { result[0].FaceId });
+
+                    if (identifyResults != null && identifyResults.Length > 0 && identifyResults[0].Candidates.Any(c => c.Confidence > 0.7))
                     {
-                        return person;
+                        var candidate = identifyResults[0].Candidates.Where(c => c.Confidence > 0.7).FirstOrDefault();
+
+                        var person = await faceClient.GetPersonAsync(PersonGroup,candidate.PersonId);
+                        if (person != null)
+                        {
+                            return person;
+                        }
                     }
                 }
                 catch(FaceAPIException faceException)

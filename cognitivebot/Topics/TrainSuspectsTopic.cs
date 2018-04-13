@@ -65,6 +65,7 @@ namespace cognitivebot.Topics
 
                 if(person != null && !string.IsNullOrEmpty(person.Name))
                 {
+                    LatestImage = photo;
                     Suspect = person;
                     var reply2 = BotReplies.ReplyWithOptions($"Is this {person.Name}?", new List<string>() { Intents.Yes, Intents.No }, context);
                     await context.SendActivity(reply2);
@@ -100,6 +101,9 @@ namespace cognitivebot.Topics
                 var reply = context.Request.CreateReply($"Added picture to {Suspect.Name}");
                 await context.SendActivity(reply);
             }
+
+            var reply2 = BotReplies.ReplyWithOptions("Would you like to add another?", new List<string>() { Intents.Yes, Intents.No }, context);
+            await context.SendActivity(reply2);
             State = TopicState.finished;
             return true;
             
