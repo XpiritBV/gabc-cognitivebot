@@ -6,6 +6,10 @@ April 21st 2018 Xpirit will host the Global Azure Bootcamp in Amsterdam with a f
 
 ![](/img/csi-azure.png)
 
+if you have any questions about the bot and you're not present at the GABC Saturday 21st contact one of the builders:
+
+- [Chris van Sluijsveld](https://twitter.com/cvsluijsveld)
+- [Geert van der Cruijsen](https://twitter.com/geertvdc)
 
 ## Introduction to the Bot
 
