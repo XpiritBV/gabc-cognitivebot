@@ -4,6 +4,8 @@
 ### Background
 April 21st 2018 Xpirit will host the Global Azure Bootcamp in Amsterdam with a full day of technology and fun. All sessions and hands on labs will be in a CSI:Azure theme to solving crimes using Azure technology. This Cognitive Services based Chat Bot built on on Microsoft Bot Framework V4 is 1 of the hands on labs built for the Global Azure Bootcamp.
 
+![](/img/csi-azure.png)
+
 
 ## Introduction to the Bot
 
