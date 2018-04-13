@@ -1,0 +1,1 @@
+# Lab 00: Running the bot locally and explore its capabilities
