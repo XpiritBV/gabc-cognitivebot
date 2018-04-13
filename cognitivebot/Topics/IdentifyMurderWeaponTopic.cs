@@ -1,5 +1,7 @@
-﻿using System;
+﻿using cognitivebot.Services;
+using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace cognitivebot.Topics
 {
@@ -11,19 +13,43 @@ namespace cognitivebot.Topics
 
         public string Name { get => "IdentifyTopic"; }
 
-        public Task<bool> ContinueTopic(DetectiveBotContext context)
+        public async Task<bool> ContinueTopic(DetectiveBotContext context)
         {
-            throw new NotImplementedException();
+            if (context.Request.Attachments != null && context.Request.Attachments.Count > 0)
+            {
+                CustomVisionService customVisionService = new CustomVisionService();
+
+                var result = await customVisionService.IdentifyWeapon(context.Request.Attachments[0].ContentUrl);
+
+                if (result != null)
+                {
+                    var maxResult = result.Predictions.OrderByDescending(c => c.Probability).First();
+                                        
+                    var resultReply = context.Request.CreateReply($"I think it is {maxResult.Tag} with probability {maxResult.Probability:P1}");
+
+                    await context.SendActivity(resultReply);
+                }
+                else
+                {
+                    var resultReply = context.Request.CreateReply($"I'm not sure what this is");
+                    await context.SendActivity(resultReply);
+                }
+            }
+
+            var reply = context.Request.CreateReply("Please send me a picture to identify the next weapon or type \"Quit\" to stop");
+            await context.SendActivity(reply);
+
+            return true;
         }
 
-        public Task<bool> ResumeTopic(DetectiveBotContext context)
+        public async Task<bool> ResumeTopic(DetectiveBotContext context)
         {
-            throw new NotImplementedException();
+            return await this.ContinueTopic(context);
         }
 
-        public Task<bool> StartTopic(DetectiveBotContext context)
+        public async Task<bool> StartTopic(DetectiveBotContext context)
         {
-            throw new NotImplementedException();
+            return await this.ContinueTopic(context);
         }
     }
 }

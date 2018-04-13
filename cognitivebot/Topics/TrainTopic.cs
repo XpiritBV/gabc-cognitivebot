@@ -41,9 +41,6 @@ namespace cognitivebot.Topics
                 case Intents.Suspects:
                     context.ConversationState.ActiveTopic = new TrainSuspectsTopic();
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
-                case Intents.MurderWeapons:
-                    context.ConversationState.ActiveTopic = new TrainMurderWeaponsTopic();
-                    return await context.ConversationState.ActiveTopic.StartTopic(context);
                 default:
                     var reply = context.Request.CreateReply("Sorry i can't help you with that");
                     await context.SendActivity(reply);
@@ -59,7 +56,7 @@ namespace cognitivebot.Topics
 
         public async Task<bool> StartTopic(DetectiveBotContext context)
         {
-            var reply = BotReplies.ReplyWithOptions("What would you like to train?", new List<string>() { Intents.Suspects, Intents.MurderWeapons }, context);
+            var reply = BotReplies.ReplyWithOptions("What would you like to train?", new List<string>() { Intents.Suspects }, context);
             await context.SendActivity(reply);
             State = TopicState.askedTopic;
 
