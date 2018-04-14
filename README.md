@@ -12,7 +12,7 @@ if you have any questions about the bot and you're not present at the GABC Satur
 - [Geert van der Cruijsen](https://twitter.com/geertvdc)
 
 ## Introduction to the Bot
-
+todo
 
 ## Hands on labs
 
