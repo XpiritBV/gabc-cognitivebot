@@ -17,6 +17,17 @@ git checkout -f labs/lab01
 cognitivebot\cognitivebot.sln
 ```
 
-4. TODO
-* find the location in the bot that should do face recognition
-* implement face client from Cognitive services
+4. Browse the code to find the place to add face recognition logic used by the bot "Person Details" method.
+
+5. You'll need the Face API from cognitive services in Azure. Create a new Face API in Azure and retrieve the API Key from the portal
+
+![](/labs/img/5.png)
+
+6. Use the [FaceClient](https://www.nuget.org/packages/Microsoft.ProjectOxford.Face/) from cognitive services and implement the method to return details from identified persons.
+
+
+
+## References / Hints
+> Master branch has a working version implemented.
+
+> Face API Docs: https://docs.microsoft.com/en-us/azure/cognitive-services/face/quickstarts/csharp
