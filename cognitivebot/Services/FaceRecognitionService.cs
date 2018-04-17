@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.ProjectOxford.Face;
 using Microsoft.ProjectOxford.Face.Contract;
 using System.Linq;
+using System.Net;
+using System.IO;
 
 namespace cognitivebot.Services
 {
@@ -73,7 +75,11 @@ namespace cognitivebot.Services
 
         public async Task<Person> IdentifyPerson(string url)
         {
-            var result = await faceClient.DetectAsync(url, true);
+            var webClient = new WebClient();
+            var memoryStream = new MemoryStream(webClient.DownloadData(url));
+
+            var result = await faceClient.DetectAsync(memoryStream, true);
+            //var result = await faceClient.DetectAsync(url, true);
             if(result != null && result.Length > 0)
             {
                 try

@@ -10,7 +10,7 @@ git clone https://github.com/XpiritBV/gabc-cognitivebot.git
 2. Checkout branch for this lab called labs/lab05
 ```
 git checkout -f labs/lab05
-```
+``` 
 
 3. Open the solution in Visual Studio 2017, VS Code or Visual Studio for Mac: 
 ```
@@ -19,18 +19,17 @@ cognitivebot\cognitivebot.sln
 
 4. Browse the code of the TrainCustomVision console application. Look at the code provides in the ```Program.cs``` class.
 
+5. Fill in your Custom Vision api key and add the code to create or retrieve a custom vision project. You can create a project using code or create one in the [Custom Vision portal](https://customvision.ai/)
 
-4. Browse the code to find the place to add face recognition logic used by the bot "Person Details" method.
+![](/labs/img/customvision.png)
 
-5. You'll need the Face API from cognitive services in Azure. Create a new Face API in Azure and retrieve the API Key from the portal
+6. Use the TrainingAPI from cognitive services and implement the methods to upload and tag images to train a Custom Vision Model.
 
-![](/labs/img/5.png)
-
-6. Use the [FaceClient](https://www.nuget.org/packages/Microsoft.ProjectOxford.Face/) from cognitive services and implement the method to return details from identified persons.
 
 
 
 ## References / Hints
 > Master branch has a working version implemented.
 
-> Face API Docs: https://docs.microsoft.com/en-us/azure/cognitive-services/face/quickstarts/csharp
+> Custom Vision API Docs: 
+https://docs.microsoft.com/en-us/azure/cognitive-services/custom-vision-service/home
