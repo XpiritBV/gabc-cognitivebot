@@ -14,7 +14,7 @@ cognitivebot\cognitivebot.sln
 
 3. Run the app (F5) it will a browser with a web page probably on https://localhost:5000
 
-4. download the bot emulator to test the bot. [Download from Github](https://github.com/Microsoft/BotFramework-Emulator/releases)
+4. Download the bot emulator to test the bot. [Download from Github](https://github.com/Microsoft/BotFramework-Emulator/releases)
 
 5. Run the emulator and connect it to https://localhost:5000/api/messages
 
