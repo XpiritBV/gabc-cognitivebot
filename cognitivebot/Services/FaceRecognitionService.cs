@@ -6,6 +6,9 @@ using Microsoft.ProjectOxford.Face.Contract;
 using System.Linq;
 using System.Net;
 using System.IO;
+using Microsoft.Bot.Connector.Authentication;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace cognitivebot.Services
 {
@@ -75,8 +78,12 @@ namespace cognitivebot.Services
 
         public async Task<Person> IdentifyPerson(string url)
         {
-            var webClient = new WebClient();
-            var memoryStream = new MemoryStream(webClient.DownloadData(url));
+            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            HttpClient httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var memoryStream = await httpClient.GetStreamAsync(url);
 
             var result = await faceClient.DetectAsync(memoryStream, true);
             //var result = await faceClient.DetectAsync(url, true);
