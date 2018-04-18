@@ -17,4 +17,13 @@ git checkout -f labs/lab04
 cognitivebot\cognitivebot.sln
 ```
 
-4. 
+5. Use the [FaceClient](https://www.nuget.org/packages/Microsoft.ProjectOxford.Face/) from cognitive services and implement methods to train new persons. This contains the following steps
+* After upload of an image check if it contains a face
+* if image contains a face do we already know it?
+* if yes -> add it to the existing person to improve recognition
+* if no -> ask for a name and create a new person
+
+## References / Hints
+> Master branch has a working version implemented.
+
+> Face API Docs: https://docs.microsoft.com/en-us/azure/cognitive-services/face/quickstarts/csharp
