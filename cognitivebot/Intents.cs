@@ -11,6 +11,8 @@ namespace cognitivebot
 
         public const string IdentifySuspect = "Identify suspect";
 
+        public const string DescribePerson = "Describe person";
+
         public const string IdentifyMurderWeapon = "Identify murder weapon";
 
         public const string MatchSuspect = "Match Suspect Description";

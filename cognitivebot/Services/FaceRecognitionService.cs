@@ -31,7 +31,12 @@ namespace cognitivebot.Services
                         FaceAttributeType.Hair,
                     };
 
-            var face = await faceClient.DetectAsync(url, true, false, requiredFaceAttributes);
+            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var memoryStream = await httpClient.GetStreamAsync(url);
+
+            var face = await faceClient.DetectAsync(memoryStream, true, false, requiredFaceAttributes);
             if (face != null && face.Length > 0)
             {
                 return face[0];
@@ -49,7 +54,12 @@ namespace cognitivebot.Services
 
         public async Task<bool> AddPhotoToExistingPerson(Guid id, string url)
         {
-            var result = await faceClient.AddPersonFaceAsync(PersonGroup, id, url);
+            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var memoryStream = await httpClient.GetStreamAsync(url);
+
+            var result = await faceClient.AddPersonFaceAsync(PersonGroup, id,memoryStream);
 
             if(result != null && result.PersistedFaceId != Guid.Empty)
             {
@@ -80,13 +90,11 @@ namespace cognitivebot.Services
         {
             var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
             HttpClient httpClient = new HttpClient();
-
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             var memoryStream = await httpClient.GetStreamAsync(url);
 
             var result = await faceClient.DetectAsync(memoryStream, true);
-            //var result = await faceClient.DetectAsync(url, true);
+
             if(result != null && result.Length > 0)
             {
                 try
