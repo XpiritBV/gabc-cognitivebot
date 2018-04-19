@@ -1,4 +1,5 @@
-﻿using Microsoft.Cognitive.CustomVision.Prediction;
+﻿using Microsoft.Bot.Connector.Authentication;
+using Microsoft.Cognitive.CustomVision.Prediction;
 using Microsoft.Cognitive.CustomVision.Prediction.Models;
 using Microsoft.Cognitive.CustomVision.Training;
 using Microsoft.Cognitive.CustomVision.Training.Models;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 
@@ -28,35 +30,36 @@ namespace cognitivebot.Services
 
         public async Task<bool> AddNewWeapon(string name, string contentUrl)
         {
+            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            HttpClient httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var memoryStream = await httpClient.GetStreamAsync(contentUrl);
 
             var project = await _customVisionTrainingAPI.GetProjectAsync(new Guid("06d4aeff-fb9d-453f-8912-5b2e89d1f1d4"));
 
 
-            var webClient = new WebClient();
-            var memoryStream = new MemoryStream(webClient.DownloadData(contentUrl));
+            //var webClient = new WebClient();
+            //var memoryStream = new MemoryStream(webClient.DownloadData(contentUrl));
 
 
             var images = new List<ImageUrlCreateEntry>();
-            images.Add(new ImageUrlCreateEntry(contentUrl + "/" + name));
-            //var tags = new List<Guid>() { imageTag.Id, racingTag.Id };
-            //var response = _customVisionTrainingAPI.CreateImagesFromData(project.Id, memoryStream);
-            //var response = await _customVisionTrainingAPI.CreateImagesFromUrlsAsync(project.Id, new ImageUrlCreateBatch(images));
-
-            //_customVisionTrainingAPI.CreateImagesFromUrls(project.Id, new ImageUrlCreateBatch(images));
-
-            //if (response.IsBatchSuccessful)
-            //    return true;
+            images.Add(new ImageUrlCreateEntry(contentUrl + "/" + name));            
 
             return false;
-
         }
 
         public async Task<ImagePredictionResultModel> IdentifyWeapon(string contentUrl)
         {
             var project = await _customVisionTrainingAPI.GetProjectAsync(new Guid("06d4aeff-fb9d-453f-8912-5b2e89d1f1d4"));
 
-            var webClient = new WebClient();
-            var memoryStream = new MemoryStream(webClient.DownloadData(contentUrl));
+            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            HttpClient httpClient = new HttpClient();
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var memoryStream = await httpClient.GetStreamAsync(contentUrl);            
 
             var respon = await this._predictionEndpoint.PredictImageAsync(project.Id, memoryStream);
             
