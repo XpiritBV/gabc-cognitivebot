@@ -55,6 +55,9 @@ namespace cognitivebot.Topics
                 case Intents.MatchSuspect:
                     context.ConversationState.ActiveTopic = new MatchSuspectTopic(new FaceRecognitionService());
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
+                case Intents.DescribePerson:
+                    context.ConversationState.ActiveTopic = new DescribePersonTopic();
+                    return await context.ConversationState.ActiveTopic.StartTopic(context);
                 default:
                     var reply3 = context.Request.CreateReply("Sorry i can't help you with that");
                     await context.SendActivity(reply3);
@@ -71,7 +74,7 @@ namespace cognitivebot.Topics
 
         public async Task<bool> StartTopic(DetectiveBotContext context)
         {
-            var reply = BotReplies.ReplyWithOptions("How may i help you?", new List<string>() {Intents.Train, Intents.IdentifySuspect, Intents.IdentifyMurderWeapon, Intents.MatchSuspect}, context);
+            var reply = BotReplies.ReplyWithOptions("How may i help you?", new List<string>() {Intents.Train, Intents.IdentifySuspect, Intents.IdentifyMurderWeapon, Intents.MatchSuspect, Intents.DescribePerson}, context);
             await context.SendActivity(reply);
             State = TopicState.askedTopic;
 

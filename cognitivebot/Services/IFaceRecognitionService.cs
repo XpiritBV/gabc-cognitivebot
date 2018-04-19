@@ -12,7 +12,6 @@ namespace cognitivebot.Services
         Task<Face> GetFaceAttributes(string url);
         Task<IList<Person>> GetKnownPersons();
         Task<Person> IdentifyPerson(string url);
-
         Task TrainModel();
     }
 }
