@@ -1,4 +1,5 @@
 ﻿using System;
+using cognitivebot.Services;
 using cognitivebot.Topics;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Core.Extensions;
@@ -7,8 +8,13 @@ namespace cognitivebot
 {
     public class DetectiveBotContext : BotContextWrapper
     {
-        public DetectiveBotContext(IBotContext context) : base(context)
+        private IFaceRecognitionService _faceRecognitionService;
+        private ICustomVisionService _customVisionService;
+
+        public DetectiveBotContext(IBotContext context, IFaceRecognitionService faceRecognitionService, ICustomVisionService customVisionService) : base(context)
         {
+            _faceRecognitionService = faceRecognitionService;
+            _customVisionService = customVisionService;
         }
 
         public IRecognizedIntents RecognizedIntents { get { return this.Get<IRecognizedIntents>(); } }

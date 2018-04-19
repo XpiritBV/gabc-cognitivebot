@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using cognitivebot.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot;
@@ -33,6 +34,11 @@ namespace cognitivebot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton(_ => Configuration);
+
+            services.AddTransient<ICustomVisionService, CustomVisionService>();
+            services.AddTransient<IFaceRecognitionService, FaceRecognitionService>();
+
+
             services.AddBot<DetectiveBot>(options =>
             {
                 options.CredentialProvider = new SimpleCredentialProvider(Configuration.GetSection(MicrosoftAppCredentials.MicrosoftAppIdKey)?.Value, Configuration.GetSection(MicrosoftAppCredentials.MicrosoftAppPasswordKey)?.Value);

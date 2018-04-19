@@ -10,6 +10,16 @@ namespace cognitivebot.Topics
 {
     public class DefaultTopic : ITopic
     {
+        private ICustomVisionService _customVisionService;
+        private IFaceRecognitionService _faceRecognitionService;
+
+        public DefaultTopic(ICustomVisionService customVisionService, IFaceRecognitionService faceRecognitionService)
+        {
+            _customVisionService = customVisionService;
+            _faceRecognitionService = faceRecognitionService;
+        }
+
+
         public enum TopicState
         {
             unknown,
@@ -50,7 +60,7 @@ namespace cognitivebot.Topics
                     context.ConversationState.ActiveTopic = new IdentifySuspectTopic();
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.IdentifyMurderWeapon:
-                    context.ConversationState.ActiveTopic = new IdentifyMurderWeaponTopic();
+                    context.ConversationState.ActiveTopic = new IdentifyMurderWeaponTopic(_customVisionService);
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.MatchSuspect:
                     context.ConversationState.ActiveTopic = new MatchSuspectTopic(new FaceRecognitionService());

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using cognitivebot.Services;
 using cognitivebot.Topics;
 using Microsoft.Bot;
 using Microsoft.Bot.Builder;
@@ -16,43 +17,49 @@ namespace cognitivebot
     public class DetectiveBot : IBot
     {
         private ILogger _logger;
+        private IFaceRecognitionService _faceRecognitionService;
+        private ICustomVisionService _customVisionService;
 
-        public DetectiveBot(ILoggerFactory loggerFactory)
+        public DetectiveBot(ILoggerFactory loggerFactory, ICustomVisionService customVisionService, IFaceRecognitionService faceRecognitionService)
         {
             _logger = loggerFactory?.CreateLogger(GetType().Name);
+            _faceRecognitionService = faceRecognitionService;
+            _customVisionService = customVisionService;
         }
 
         /// <inheritdoc />
         public async Task OnReceiveActivity(IBotContext context)
         {
-            switch (context.Request.Type)
+            var botContext = new DetectiveBotContext(context, _faceRecognitionService, _customVisionService);
+
+            switch (botContext.Request.Type)
             {
                 case ActivityTypes.ConversationUpdate:
-                    await GetOrAddUserProfile(context);
+                    await GetOrAddUserProfile(botContext);
                     break;
                 case ActivityTypes.Message:
-                    await HandleMessage(context);
+                    await HandleMessage(botContext);
                     break;
             }
         }
 
         public async Task HandleMessage(IBotContext botContext)
         {
-            var context = new DetectiveBotContext(botContext);
+            var context = new DetectiveBotContext(botContext, _faceRecognitionService, _customVisionService);
 
             var handled = false;
 
             if (context.RecognizedIntents.TopIntent?.Name == Intents.Quit)
             {
                 await context.SendActivity($"Stopping current action");
-                context.ConversationState.ActiveTopic = new DefaultTopic();
+                context.ConversationState.ActiveTopic = new DefaultTopic(_customVisionService, _faceRecognitionService);
                 handled = await context.ConversationState.ActiveTopic.StartTopic(context);
                 return;
             }
 
             if(context.ConversationState.ActiveTopic == null)
             {
-                context.ConversationState.ActiveTopic = new DefaultTopic();
+                context.ConversationState.ActiveTopic = new DefaultTopic(_customVisionService, _faceRecognitionService);
                 handled = await context.ConversationState.ActiveTopic.StartTopic(context);
             }
             else
@@ -64,7 +71,7 @@ namespace cognitivebot
             if (handled == false && !(context.ConversationState.ActiveTopic is DefaultTopic))
             {
                 // USe DefaultTopic as the active topic
-                context.ConversationState.ActiveTopic = new DefaultTopic();
+                context.ConversationState.ActiveTopic = new DefaultTopic(_customVisionService, _faceRecognitionService);
                 handled = await context.ConversationState.ActiveTopic.StartTopic(context);
             }
         }
@@ -73,7 +80,7 @@ namespace cognitivebot
         {
             try
             {
-                var context = new DetectiveBotContext(botContext);
+                var context = new DetectiveBotContext(botContext, _faceRecognitionService, _customVisionService);
 
                 var activity = context.Request.AsConversationUpdateActivity();
                 var user = activity.MembersAdded.Where(m => m.Id == activity.Recipient.Id).FirstOrDefault();

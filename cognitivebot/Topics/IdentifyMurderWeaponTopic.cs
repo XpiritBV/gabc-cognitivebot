@@ -7,8 +7,10 @@ namespace cognitivebot.Topics
 {
     public class IdentifyMurderWeaponTopic : ITopic
     {
-        public IdentifyMurderWeaponTopic()
+        private ICustomVisionService _customVisionService;
+        public IdentifyMurderWeaponTopic(ICustomVisionService customVisionService)
         {
+            _customVisionService = customVisionService;
         }
 
         public string Name { get => "IdentifyTopic"; }
@@ -17,9 +19,9 @@ namespace cognitivebot.Topics
         {
             if (context.Request.Attachments != null && context.Request.Attachments.Count > 0)
             {
-                CustomVisionService customVisionService = new CustomVisionService();
+                //CustomVisionService customVisionService = new CustomVisionService();
 
-                var result = await customVisionService.IdentifyWeapon(context.Request.Attachments[0].ContentUrl);
+                var result = await _customVisionService.IdentifyWeapon(context.Request.Attachments[0].ContentUrl);
 
                 if (result != null)
                 {
