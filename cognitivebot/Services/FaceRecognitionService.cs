@@ -19,8 +19,7 @@ namespace cognitivebot.Services
         
         public FaceRecognitionService()
         {
-            //use this face client or roll your own by adding a face api in Azure (This api key will be reset after GABC saturday);
-            faceClient = new FaceServiceClient("c52bfd294723483d82a4609f422ea6a1", "https://westeurope.api.cognitive.microsoft.com/face/v1.0");
+            faceClient = new FaceServiceClient("INSERTAPI KEY", "https://westeurope.api.cognitive.microsoft.com/face/v1.0");
         }
 
         public async Task<Face> GetFaceAttributes(string url)
