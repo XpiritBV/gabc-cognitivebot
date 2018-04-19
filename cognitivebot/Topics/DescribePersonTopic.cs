@@ -21,7 +21,7 @@ namespace cognitivebot.Topics
                
                 if(result != null)
                 {
-                    var resultReply = context.Request.CreateReply($"Age: {result.FaceAttributes.Age},Gender: {result.FaceAttributes.Gender},Smile: {result.FaceAttributes.Smile}");
+                    var resultReply = context.Request.CreateReply($"implement this in lab01");
                     await context.SendActivity(resultReply);  
                 }
                 else

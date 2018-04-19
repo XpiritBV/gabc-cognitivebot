@@ -10,7 +10,6 @@ namespace cognitivebot.Services
         Task<bool> AddNewPerson(string name, string url);
         Task<bool> AddPhotoToExistingPerson(Guid id, string url);
         Task<Face> GetFaceAttributes(string url);
-        Task<IList<Person>> GetKnownPersons();
         Task<Person> IdentifyPerson(string url);
         Task TrainModel();
     }
