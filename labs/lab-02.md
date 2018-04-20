@@ -7,7 +7,7 @@
 git clone https://github.com/XpiritBV/gabc-cognitivebot.git
 ```
 
-2. Checkout branch for this lab called labs/lab01
+2. Checkout branch for this lab called labs/lab02
 ```
 git checkout -f labs/lab02
 ```

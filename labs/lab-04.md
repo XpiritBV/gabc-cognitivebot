@@ -7,7 +7,7 @@ In this lab we'll add functionality train our API for known suspects. In real li
 git clone https://github.com/XpiritBV/gabc-cognitivebot.git
 ```
 
-2. Checkout branch for this lab called labs/lab01
+2. Checkout branch for this lab called labs/lab04
 ```
 git checkout -f labs/lab04
 ```

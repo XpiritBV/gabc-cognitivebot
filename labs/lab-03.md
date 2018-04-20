@@ -7,7 +7,7 @@ In this lab we'll take a look at the basics of the Custom Vision apis in Cogniti
 git clone https://github.com/XpiritBV/gabc-cognitivebot.git
 ```
 
-2. Checkout branch for this lab called labs/lab05
+2. Checkout branch for this lab called labs/lab03
 ```
 git checkout -f labs/lab03
 ``` 
