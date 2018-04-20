@@ -73,8 +73,13 @@ namespace cognitivebot.Services
 
         public async Task<bool> AddNewPerson(string name, string url)
         {
+            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            HttpClient httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var memoryStream = await httpClient.GetStreamAsync(url);
+
             var person = await faceClient.CreatePersonAsync(PersonGroup, name);
-            var result = await faceClient.AddPersonFaceAsync(PersonGroup, person.PersonId, url);
+            var result = await faceClient.AddPersonFaceAsync(PersonGroup, person.PersonId, memoryStream);
 
             if (result != null && result.PersistedFaceId != Guid.Empty)
             {
