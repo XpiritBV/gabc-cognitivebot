@@ -19,3 +19,5 @@ cognitivebot\cognitivebot.sln
 5. Run the emulator and connect it to https://localhost:5000/api/messages
 
 6. Explore the bot capabilities by chatting with it.
+
+7. You can also connect to the bot in production on [skype](https://join.skype.com/bot/ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27) try to see if you can use it to identify murder weapons or suspects (hint: try Xpirit employees).
