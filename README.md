@@ -12,7 +12,7 @@ if you have any questions about the bot and you're not present at the GABC Satur
 - [Geert van der Cruijsen](https://twitter.com/geertvdc)
 
 ## Introduction to the Bot
-todo
+The Bot is introduced as a detective helper which helps with quickly identifying new suspects as well as recognizing potential weapons.
 
 ## Hands on labs
 
@@ -21,8 +21,8 @@ todo
 - [Lab 00: Running the bot locally and explore its capabilities](/labs/lab-00.md)
 - [Lab 01: Add basic face recognition](/labs/lab-01.md)
 - [Lab 02: Identify criminals](/labs/lab-02.md)
-- [Lab 03: Identify murder weapons](/labs/lab-03.md)
+- [Lab 03: Training the API for known murder weapon types](/labs/lab-03.md)
 - [Lab 04: Training the API for known suspects](/labs/lab-04.md)
-- [Lab 05: Training the API for known murder weapon types](/labs/lab-05.md)
+- [Lab 05: Identify murder weapons](/labs/lab-05.md)
 - [Lab 06: Deploy the bot to Azure and connect it to channels](/labs/lab-06.md)
 
