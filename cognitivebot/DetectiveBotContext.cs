@@ -8,8 +8,8 @@ namespace cognitivebot
 {
     public class DetectiveBotContext : BotContextWrapper
     {
-        private IFaceRecognitionService _faceRecognitionService;
-        private ICustomVisionService _customVisionService;
+        public IFaceRecognitionService _faceRecognitionService { get; set; }
+        public ICustomVisionService _customVisionService { get; set; }
 
         public DetectiveBotContext(IBotContext context, IFaceRecognitionService faceRecognitionService, ICustomVisionService customVisionService) : base(context)
         {

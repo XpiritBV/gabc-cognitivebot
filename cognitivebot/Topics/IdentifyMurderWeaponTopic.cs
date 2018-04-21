@@ -7,7 +7,8 @@ namespace cognitivebot.Topics
 {
     public class IdentifyMurderWeaponTopic : ITopic
     {
-        private ICustomVisionService _customVisionService;
+        public ICustomVisionService _customVisionService { get; set; }
+
         public IdentifyMurderWeaponTopic(ICustomVisionService customVisionService)
         {
             _customVisionService = customVisionService;

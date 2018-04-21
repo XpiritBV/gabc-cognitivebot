@@ -10,8 +10,8 @@ namespace cognitivebot.Topics
 {
     public class DefaultTopic : ITopic
     {
-        private ICustomVisionService _customVisionService;
-        private IFaceRecognitionService _faceRecognitionService;
+        public  ICustomVisionService _customVisionService { get; set; }
+        public IFaceRecognitionService _faceRecognitionService { get; set; }
 
         public DefaultTopic(ICustomVisionService customVisionService, IFaceRecognitionService faceRecognitionService)
         {

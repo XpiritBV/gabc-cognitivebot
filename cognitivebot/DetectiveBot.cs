@@ -16,9 +16,9 @@ namespace cognitivebot
 {
     public class DetectiveBot : IBot
     {
-        private ILogger _logger;
-        private IFaceRecognitionService _faceRecognitionService;
-        private ICustomVisionService _customVisionService;
+        public ILogger _logger { get; set; }
+        public IFaceRecognitionService _faceRecognitionService { get; set; }
+        public ICustomVisionService _customVisionService { get; set; }
 
         public DetectiveBot(ILoggerFactory loggerFactory, ICustomVisionService customVisionService, IFaceRecognitionService faceRecognitionService)
         {
