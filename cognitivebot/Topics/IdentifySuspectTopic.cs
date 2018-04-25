@@ -6,8 +6,11 @@ namespace cognitivebot.Topics
 {
     public class IdentifySuspectTopic : ITopic
     {
-        public IdentifySuspectTopic()
+        IFaceRecognitionService faceRecognitionService { get; set; }
+
+        public IdentifySuspectTopic(IFaceRecognitionService faceRecognitionService)
         {
+            this.faceRecognitionService = faceRecognitionService;
         }
 
         public string Name { get => "IdentifyTopic"; }
@@ -16,7 +19,6 @@ namespace cognitivebot.Topics
         {
             if (context.Request.Attachments != null && context.Request.Attachments.Count > 0)
             {
-                FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
                 var result = await faceRecognitionService.IdentifyPerson(context.Request.Attachments[0].ContentUrl);
 
                 if(result != null)

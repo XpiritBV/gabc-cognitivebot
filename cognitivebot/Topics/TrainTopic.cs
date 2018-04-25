@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cognitivebot.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,6 +7,13 @@ namespace cognitivebot.Topics
 {
     public class TrainTopic : ITopic
     {
+        IFaceRecognitionService faceRecognitionService { get; set; }
+
+        public TrainTopic(IFaceRecognitionService faceRecognitionService)
+        {
+            this.faceRecognitionService = faceRecognitionService;
+        }
+
         public enum TopicState
         {
             unknown,
@@ -39,7 +47,7 @@ namespace cognitivebot.Topics
             switch (context.RecognizedIntents.TopIntent?.Name)
             {
                 case Intents.Suspects:
-                    context.ConversationState.ActiveTopic = new TrainSuspectsTopic();
+                    context.ConversationState.ActiveTopic = new TrainSuspectsTopic(faceRecognitionService);
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 default:
                     var reply = context.Request.CreateReply("Sorry i can't help you with that");

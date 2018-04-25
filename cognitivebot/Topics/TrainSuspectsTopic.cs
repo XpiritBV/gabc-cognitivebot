@@ -8,6 +8,12 @@ namespace cognitivebot.Topics
 {
     public class TrainSuspectsTopic : ITopic
     {
+        IFaceRecognitionService faceRecognitionService { get; set; }
+
+        public TrainSuspectsTopic(IFaceRecognitionService faceRecognitionService)
+        {
+            this.faceRecognitionService = faceRecognitionService;
+        }
         public enum TopicState
         {
             unknown,
@@ -60,7 +66,6 @@ namespace cognitivebot.Topics
             {
                 string photo = context.Request.Attachments[0].ContentUrl;
 
-                FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
                 var person = await faceRecognitionService.IdentifyPerson(photo);
 
                 if(person != null && !string.IsNullOrEmpty(person.Name))
@@ -88,7 +93,6 @@ namespace cognitivebot.Topics
 
         private async Task<bool> CheckExistingPerson(DetectiveBotContext context)
         {
-            FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
             if (context.RecognizedIntents.TopIntent?.Name == Intents.Yes)
             {
                 var result = await faceRecognitionService.AddPhotoToExistingPerson(Suspect.PersonId, LatestImage);
@@ -112,7 +116,6 @@ namespace cognitivebot.Topics
         private async Task<bool> SaveName(DetectiveBotContext context)
         {
             var name = context.Request.Text;
-            FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
             var result = await faceRecognitionService.AddNewPerson(name, LatestImage);
             var reply = context.Request.CreateReply($"Added person {name}");
             await context.SendActivity(reply);
@@ -136,7 +139,6 @@ namespace cognitivebot.Topics
                 var reply = context.Request.CreateReply("I'll be training the newly added pictures in the background.");
                 await context.SendActivity(reply);
 
-                FaceRecognitionService faceRecognitionService = new FaceRecognitionService();
                 await faceRecognitionService.TrainModel();
                 return false;
             }

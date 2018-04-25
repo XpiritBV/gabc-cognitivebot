@@ -54,19 +54,19 @@ namespace cognitivebot.Topics
             switch(context.RecognizedIntents.TopIntent?.Name)
             {
                 case Intents.Train:
-                    context.ConversationState.ActiveTopic = new TrainTopic();
+                    context.ConversationState.ActiveTopic = new TrainTopic(_faceRecognitionService);
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.IdentifySuspect:
-                    context.ConversationState.ActiveTopic = new IdentifySuspectTopic();
+                    context.ConversationState.ActiveTopic = new IdentifySuspectTopic(_faceRecognitionService);
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.IdentifyMurderWeapon:
                     context.ConversationState.ActiveTopic = new IdentifyMurderWeaponTopic(_customVisionService);
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.MatchSuspect:
-                    context.ConversationState.ActiveTopic = new MatchSuspectTopic(new FaceRecognitionService());
+                    context.ConversationState.ActiveTopic = new MatchSuspectTopic(_faceRecognitionService);
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 case Intents.DescribePerson:
-                    context.ConversationState.ActiveTopic = new DescribePersonTopic();
+                    context.ConversationState.ActiveTopic = new DescribePersonTopic(_faceRecognitionService);
                     return await context.ConversationState.ActiveTopic.StartTopic(context);
                 default:
                     var reply3 = context.Request.CreateReply("Sorry i can't help you with that");

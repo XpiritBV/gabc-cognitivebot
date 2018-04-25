@@ -131,7 +131,6 @@ namespace cognitivebot.Topics
                 try
                 {
                     var match = 0;
-                    faceRecognitionService = new FaceRecognitionService();
                     var face = await faceRecognitionService.GetFaceAttributes(context.Request.Attachments[0].ContentUrl);
                     if(face != null)
                     {
