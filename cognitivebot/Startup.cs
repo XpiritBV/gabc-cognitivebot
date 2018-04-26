@@ -36,7 +36,7 @@ namespace cognitivebot
             services.AddSingleton(_ => Configuration);
 
             services.AddTransient<ICustomVisionService, CustomVisionService>();
-            services.AddTransient<IFaceRecognitionService, FaceRecognitionService>();
+            services.AddTransient<IFaceRecognitionService>(s => new FaceRecognitionService(Configuration["ApiKey"], Configuration["MicrosoftAppId"], Configuration["MicrosoftAppPassword"]));
 
 
             services.AddBot<DetectiveBot>(options =>
