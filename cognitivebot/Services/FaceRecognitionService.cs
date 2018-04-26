@@ -16,10 +16,18 @@ namespace cognitivebot.Services
     {
         FaceServiceClient faceClient;
         public const string PersonGroup = "gabc";
+
+        public string ApiKey { get; set; }
+        public string BotServiceUser { get; set; }
+        public string BotServicePassword { get; set; }
         
-        public FaceRecognitionService()
+        public FaceRecognitionService(string apiKey, string botServiceUser, string botServicePassword)
         {
-            faceClient = new FaceServiceClient("c52bfd294723483d82a4609f422ea6a1", "https://westeurope.api.cognitive.microsoft.com/face/v1.0");
+            ApiKey = apiKey;
+            BotServiceUser = botServiceUser;
+            BotServicePassword = botServicePassword;
+
+            faceClient = new FaceServiceClient(ApiKey, "https://westeurope.api.cognitive.microsoft.com/face/v1.0");
         }
 
         public async Task<Face> GetFaceAttributes(string url)
@@ -31,7 +39,7 @@ namespace cognitivebot.Services
                         FaceAttributeType.Hair,
                     };
 
-            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            var token = await new MicrosoftAppCredentials(BotServiceUser, BotServicePassword).GetTokenAsync();
             HttpClient httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var memoryStream = await httpClient.GetStreamAsync(url);
@@ -54,7 +62,7 @@ namespace cognitivebot.Services
 
         public async Task<bool> AddPhotoToExistingPerson(Guid id, string url)
         {
-            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            var token = await new MicrosoftAppCredentials(BotServiceUser, BotServicePassword).GetTokenAsync();
             HttpClient httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var memoryStream = await httpClient.GetStreamAsync(url);
@@ -73,7 +81,7 @@ namespace cognitivebot.Services
 
         public async Task<bool> AddNewPerson(string name, string url)
         {
-            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            var token = await new MicrosoftAppCredentials(BotServiceUser, BotServicePassword).GetTokenAsync();
             HttpClient httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var memoryStream = await httpClient.GetStreamAsync(url);
@@ -93,7 +101,7 @@ namespace cognitivebot.Services
 
         public async Task<Person> IdentifyPerson(string url)
         {
-            var token = await new MicrosoftAppCredentials("ce6d5c93-aef8-4b2a-abf9-0dc55ef67d27", "qksWUH1886{()nctuMYYF8@").GetTokenAsync();
+            var token = await new MicrosoftAppCredentials(BotServiceUser, BotServicePassword).GetTokenAsync();
             HttpClient httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var memoryStream = await httpClient.GetStreamAsync(url);
